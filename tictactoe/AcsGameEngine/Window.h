@@ -19,6 +19,10 @@ namespace AcsGameEngine {
 
         int getY() const noexcept;
 
+        std::pair<int, int> getPosition() const noexcept;
+
+        std::pair<int, int> getSize() const noexcept;
+
         int getWidth() const noexcept;
 
         int getHeight() const noexcept;
@@ -31,9 +35,7 @@ namespace AcsGameEngine {
     private:        
         std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> m_window;        
 
-        std::pair<int, int> getPosition() const noexcept;
 
-        std::pair<int, int> getSize() const noexcept;
 /*
         void applyNewPosition() const noexcept {
             if (m_window != nullptr) {
