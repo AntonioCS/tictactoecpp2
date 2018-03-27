@@ -2,7 +2,7 @@
 #define SPRITE_H
 
 #include <SDL2/SDL.h>
-#include <utility>
+#include <memory>
 
 namespace AcsGameEngine {
 
@@ -10,15 +10,19 @@ class Renderer;
 class Texture;
 
 class Sprite {
+private:
+    using shaTexture = std::shared_ptr<Texture>;
 public:
-    Sprite(const Renderer& renderer, const Texture& texture);
-    Sprite(const Renderer& renderer, const Texture& texture, int, int);
+    Sprite(std::shared_ptr<Texture>);
+    Sprite(std::shared_ptr<Texture>, int, int);
+    Sprite(std::shared_ptr<Texture>, SDL_Rect, SDL_Rect);
     
     Sprite(const Sprite& orig) = delete;
     Sprite(Sprite&& other);
     virtual ~Sprite();
 
     void setSourceDestination(SDL_Rect, SDL_Rect);
+    void setSource(const SDL_Rect &);
 
     void setSourceXYWH(int, int, int, int);
     void setDestinationXYWH(int, int, int, int);
@@ -35,12 +39,9 @@ public:
     SDL_Rect getDestination() const noexcept;
     SDL_Rect getSource() const noexcept;
 
-    const Texture& getTexture() const noexcept;
-
+    shaTexture getTexture() const noexcept;
 private:
-    const Renderer& m_renderer;
-    const Texture& m_texture;
-
+    shaTexture m_texture;
     SDL_Rect m_destination{ 0, 0, 0, 0 };
     SDL_Rect m_source{ 0, 0, 0, 0 };
 };

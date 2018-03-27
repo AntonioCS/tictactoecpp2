@@ -5,21 +5,25 @@
 
 namespace AcsGameEngine {
 
-Sprite::Sprite(const Renderer& renderer, const Texture& texture)
-    : m_renderer(renderer)
-    , m_texture(texture)
+Sprite::Sprite(std::shared_ptr<Texture> texture)
+    : m_texture(texture)
 {
 }
 
-Sprite::Sprite(const Renderer& renderer, const Texture& texture, int w, int h)
-    : Sprite(renderer, texture)
+Sprite::Sprite(std::shared_ptr<Texture> texture, int w, int h)
+    : Sprite(texture)
 {
     setSourceXYWH(0, 0, w, h);
     setDestinationXYWH(0, 0, w, h);
 }
+Sprite::Sprite(std::shared_ptr<Texture> t, SDL_Rect s, SDL_Rect d)
+    : Sprite::Sprite(t)
+{
+    setSourceDestination(s, d);
+}
+
 Sprite::Sprite(Sprite&& other)
-    : m_renderer(std::move(other.m_renderer))
-    , m_texture(std::move(other.m_texture))
+    : m_texture(std::move(other.m_texture))
     , m_destination(std::move(other.m_destination))
     , m_source(std::move(other.m_source))
 {
@@ -33,6 +37,11 @@ void Sprite::setSourceDestination(SDL_Rect source, SDL_Rect destination)
 {
     m_source = std::move(source);
     m_destination = std::move(destination);
+}
+
+void Sprite::setSource(const SDL_Rect& r)
+{
+    setSourceXYWH(r.x, r.y, r.w, r.h);
 }
 
 void Sprite::setSourceXYWH(int x, int y, int w, int h)
@@ -77,12 +86,10 @@ void Sprite::setDestinationWH(int w, int h)
 
 void Sprite::setCenter()
 {
-    auto win_center_w = win.getWidth() / 2;
-    auto win_center_h = win.getHeight() / 2;
-
-    m_destination.x = win_center_w - (m_source.w / 2);
-    m_destination.y = win_center_h - (m_source.h / 2);
+    m_destination.x = -1;
+    m_destination.y = -1;
 }
+//*/
 
 std::pair<int, int> Sprite::getDestinationPoint() const noexcept
 {
@@ -96,7 +103,7 @@ SDL_Rect Sprite::getSource() const noexcept
 {
     return m_source;
 }
-const Texture& Sprite::getTexture() const noexcept
+Sprite::shaTexture Sprite::getTexture() const noexcept
 {
     return m_texture;
 }
