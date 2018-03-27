@@ -5,11 +5,14 @@
 #include "Texture.h"
 #include "Window.h"
 
+
 namespace AcsGameEngine {
+
 
 Renderer::Renderer(const Window& window, int index, Uint32 flags)
     : m_renderer(createRendererPointer(window.getRawPointer(), index, flags), SDL_DestroyRenderer)
     , m_window(window)
+    , m_tf(*this)
 {
 
     if (m_renderer == nullptr) {
@@ -68,78 +71,25 @@ const Window& Renderer::getWindow() const
     return m_window;
 }
 
-void AcsGameEngine::Renderer::DrawSprite(Sprite& sprite) const noexcept
+void AcsGameEngine::Renderer::DrawSprite(const Sprite& sprite) const noexcept
 {
-    const Texture& texture = sprite.getTexture();
-    SDL_RenderCopy(getRawPointer(), texture.getRawPointer(), &(sprite.getSource()), &(sprite.getDestination()));
+    auto texture = sprite.getTexture();
+    SDL_RenderCopy(getRawPointer(), texture->getRawPointer(), &(sprite.getSource()), &(sprite.getDestination()));
 }
 
-Texture Renderer::MakeTexture(const std::string &path) const noexcept
+std::shared_ptr<Texture> Renderer::MakeTexture(const std::string& path) noexcept
 {
-    SDL_Surface *tmp = IMG_Load(path.c_str());
-    SDL_Texture *t = SDL_CreateTextureFromSurface(getRawPointer(), tmp);
-    SDL_FreeSurface(tmp);
-
-    return Texture{ t };
+    return m_tf.getTexture(path);
 }
 
-Sprite Renderer::MakeSprite(const Texture &texture) const noexcept
-{    
-    return { *this, texture };
+Sprite Renderer::MakeSprite(std::shared_ptr<Texture> t) const noexcept
+{
+    return { t };
 }
 
-Sprite Renderer::MakeSprite(const std::string &path) const noexcept
+Sprite Renderer::MakeSprite(const std::string& path) noexcept
 {
-
     return MakeSprite(MakeTexture(path));
 }
 
 } // namespace AcsGameEngine
-/*
-
-TextureManager
-
-#include <memory>
-#include <unordered_map>
-#include <string>
-#include <iostream>
-
-class Texture {
-private:
-const std::string &m_path;
-public:
-Texture(const std::string &path) : m_path(path) {
-}
-
-void printPath() {
-std::cout << m_path << '\n';
-}
-};
-
-class TextureFactory {
-private:
-using tsPtr = std::shared_ptr<Texture>;
-std::unordered_map<std::string, tsPtr> m_items;
-public:
-tsPtr getTexture(const std::string &path) {
-
-if (m_items.find(path) == m_items.end()) {
-m_items[path] = std::make_shared<Texture>(path);
-}
-
-return m_items[path];
-}
-};
-
-int main() {
-TextureFactory tf;
-
-auto t1 = tf.getTexture("path1");
-auto t2 = tf.getTexture("path1");
-
-(*t1).printPath();
-//(*t2)->printPath();
-
-std::cout << t2.use_count() << '\n';
-}
-*/
