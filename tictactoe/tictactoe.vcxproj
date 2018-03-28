@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -164,6 +164,7 @@
     <ClCompile Include="Entities\EntityBoard.cpp" />
     <ClCompile Include="Entities\EntityItemType.cpp" />
     <ClCompile Include="Entities\EntitySpot.cpp" />
+    <ClCompile Include="Entities\EntityLeaderboard.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -186,6 +187,7 @@
     <ClInclude Include="Entities\EntityBoard.h" />
     <ClInclude Include="Entities\EntityItemType.h" />
     <ClInclude Include="Entities\EntitySpot.h" />
+    <ClInclude Include="Entities\EntityLeaderboard.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="AcsGameEngine\Util\Mediator.h" />
     <ClInclude Include="AcsGameEngine\Messages.h" />
