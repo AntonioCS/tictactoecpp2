@@ -12,6 +12,7 @@ public:
 
     void setType(Type type);
     Type getType() const noexcept;
+    void switchType();
 
 private:
     Type m_type;
