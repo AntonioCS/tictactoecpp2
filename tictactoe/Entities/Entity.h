@@ -1,6 +1,5 @@
 #pragma once
-#include "AcsGameEngine/Texture.h"
-#include "AcsGameEngine/Sprite.h"
+
 #include <functional>
 #include <vector>
 
