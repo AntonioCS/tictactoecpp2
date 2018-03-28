@@ -1,17 +1,19 @@
 #pragma once
 
-#include "AcsGameEngine\Sprite.h"
+#include "..\AcsGameEngine\Sprite.h"
+#include "..\AcsGameEngine\Texture.h"
 #include <utility>
+#include <memory>
+
 
 class EntityBoard  {
-    AcsGameEngine::Sprite m_sprite;
 public:
-    explicit EntityBoard(AcsGameEngine::Sprite);
-
-    void draw();
-
+    EntityBoard(std::shared_ptr<AcsGameEngine::Texture>);
+    ~EntityBoard();
+    
     std::pair<int, int> getPoint() const noexcept;
 
-        
-    ~EntityBoard();
+    AcsGameEngine::Sprite &getSprite();
+private:
+    AcsGameEngine::Sprite m_sprite;
 };

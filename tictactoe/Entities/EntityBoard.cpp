@@ -1,19 +1,18 @@
 #include "EntityBoard.h"
 
-EntityBoard::EntityBoard(const AcsGameEngine::Sprite sprite)
-    : m_sprite(std::move(sprite))
-{
-    m_sprite.setCenter();    
-}
-
-void EntityBoard::draw()
-{
-    m_sprite.draw();
+EntityBoard::EntityBoard(std::shared_ptr<AcsGameEngine::Texture> t)
+    : m_sprite(t)
+{    
 }
 
 std::pair<int, int> EntityBoard::getPoint() const noexcept
 {
     return m_sprite.getDestinationPoint();
+}
+
+AcsGameEngine::Sprite &EntityBoard::getSprite()
+{
+    return m_sprite;
 }
 
 EntityBoard::~EntityBoard()
