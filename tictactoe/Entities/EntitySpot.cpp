@@ -1,17 +1,13 @@
-#include "EntitySpot.h"
-#include "AcsGameEngine\Texture.h"
-#include "AcsGameEngine\Util\ColorList.h"
 #include <utility>
 #include <iostream>
+#include <SDL2\SDL.h>
 
-EntitySpot::EntitySpot(const AcsGameEngine::Texture& texture)
-    : m_sprite_cross(texture, { 650, 0, 95, 117 })
-    , m_sprite_circle(texture, { 650, 120, 95, 120 })
-    , m_renderer(texture.getRenderer())
-{
-}
+#include "EntitySpot.h"
+#include "../AcsGameEngine/Util/ColorList.h"
 
-EntitySpot::~EntitySpot()
+EntitySpot::EntitySpot(std::shared_ptr<AcsGameEngine::Texture> t)
+    : m_sprite_cross(t)
+    , m_sprite_circle(t)
 {
 }
 
@@ -40,9 +36,9 @@ bool EntitySpot::isClicked() const noexcept
     return m_clicked;
 }
 
-void EntitySpot::setClicked() noexcept
+void EntitySpot::setClicked(bool state) noexcept
 {    
-    m_clicked = true;
+    m_clicked = state;
 }
 
 void EntitySpot::setType(EntityItemType::Type type) {
@@ -64,20 +60,21 @@ std::ostream& operator<<(std::ostream& out, const SDL_Rect& rect) {
     return out;
 }
 
+/*
 void EntitySpot::draw() const noexcept
 {
     if (isClicked() && isTypeSet()) {
         
     }
     m_renderer.DrawRect(m_clickAbleArea, AcsGameEngine::Util::ColorList::red);
-}
+}*/
 
 bool EntitySpot::isDisabled() const noexcept
 {
     return m_disabled;
 }
 
-void EntitySpot::setDisabled() noexcept
+void EntitySpot::setDisabled(bool state) noexcept
 {
     m_disabled = true;
 }
@@ -87,13 +84,23 @@ bool EntitySpot::isTypeSet() const noexcept
     return getType() != EntityItemType::Type::not_set;
 }
 
+AcsGameEngine::Sprite & EntitySpot::getSpriteCross()
+{
+    return m_sprite_cross;
+}
+
+AcsGameEngine::Sprite & EntitySpot::getSpriteCircle()
+{
+    return m_sprite_circle;
+}
+
 SDL_Rect EntitySpot::getClickAbleArea() const noexcept
 {
     return { m_clickAbleArea.x, m_clickAbleArea.y, m_clickAbleArea.w, m_clickAbleArea.h };
 }
 
 std::unordered_map<Uint32, EntitySpot::eventFunc> EntitySpot::fetchEvents() noexcept {
-    auto func = [this](SDL_Event & event) {        
+    auto func = [this](SDL_Event & event) {
         if (event.button.button == SDL_BUTTON_LEFT) { 
             int x = event.button.x;
             int y = event.button.y;
