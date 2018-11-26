@@ -1,0 +1,6 @@
+[submodule "AcsGE"]
+	path = tictactoe/AcsGE
+	url = git@github.com:AntonioCS/AcsGE.git
+[submodule "tictactoe/AcsGE"]
+	path = tictactoe/AcsGE
+	url = git@github.com:AntonioCS/AcsGE.git
