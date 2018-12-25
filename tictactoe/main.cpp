@@ -1,75 +1,35 @@
-﻿#include <chrono>
+#include "AcsGE/Game.h"
+#include "AcsGE/GameStateManager.h"
 #include <iostream>
-#include <memory>
-#include <thread>
-#include <string>
+#include <utility> //std::pair
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include "MainState.h"
+#include "StartMenuState.h"
 
-#include "AcsGameEngine/EventManager.h"
-#include "AcsGameEngine/Renderer.h"
-#include "AcsGameEngine/Util/ColorList.h"
-#include "AcsGameEngine/Window.h"
-#include "AcsGameEngine/Texture.h"
-#include "Game.h"
+int main(int argc, char *argv[])
+{
+    AcsGameEngine::Game game{ "Test", {-1, -1}, {800, 600} };
 
-int main(int  /*argc*/, char**  /*argv*/) {
-	using AcsGameEngine::Util::ColorList;    
+    try {
+        game.Init();
 
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		std::cout << "Unable to initialize SDL: " << SDL_GetError() << '\n';
-	}
+        game
+            .getGSM()
+            ->addState<MainState>("FirstState")
+            ->addState<StartMenuState>("StartMenu")
+            ->init()
+        ;
 
-	int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
-	if ((IMG_Init(imgFlags) & imgFlags) == 0) {
-		std::cout << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << '\n';
-	}
-
-	AcsGameEngine::Window window{ "Tic tac toe" };
-	AcsGameEngine::Renderer renderer(window);
-	AcsGameEngine::EventManager em;
-
-	bool running{ true };
-
-	em.onQuit([&running](SDL_Event & e) {
-		running = false;
-	});
+        //Call init on the GameStates....
 
 
-	em.onKeyDown([&running](SDL_Event & e) {
-		if (e.key.keysym.sym == SDLK_ESCAPE)
-			running = false;
-	});
+        game.Run();
+    }
+    catch (std::exception &e) {
+        std::cout << "Exception: " << e.what() << '\n';
+    }
 
-	constexpr uint8_t framesPerSecond = 60;
-	constexpr std::chrono::milliseconds frameDelay{ 1000 / framesPerSecond };
+    game.Cleanup();
 
-	std::chrono::system_clock::time_point frameStart;
-	std::chrono::system_clock::duration frameTime{};
-    
-    Game game{ renderer, em };
-
-	while (running) {
-		frameStart = std::chrono::system_clock::now();
-		em.processEvents();
-
-		renderer.Clear(ColorList::white);
-
-        game.update();
-        game.draw();
-
-		renderer.Present();
-
-		frameTime = std::chrono::system_clock::now() - frameStart;
-
-		if (frameDelay > frameTime) {
-			std::this_thread::sleep_for(frameDelay - frameTime);
-		}
-	}
-
-	IMG_Quit();
-	SDL_Quit();
-
-	return 0;
+    return 0;
 }
