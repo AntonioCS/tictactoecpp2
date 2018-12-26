@@ -14,11 +14,6 @@ namespace {
     using AcsGameEngine::ECS::EntityManager;
     using AcsGameEngine::ECS::SpriteComponent;
     using AcsGameEngine::Util::Shapes::Rectangle;
-
-    void bla(int x, int y)
-    {
-        std::cout << "MOUSE X: " << x << " MOUSE Y: " << y << '\n';
-    }
 }
 
 void StartMenuState::init()
@@ -29,13 +24,11 @@ void StartMenuState::init()
     const int center_y = 50;
 
     m_sprites["start_btn"]->setDestinationXY(center_x, center_y);
-    getEventManager()->onMouseMove(bla);
-    /*
+
     getEventManager()->onMouseMove([](int x, int y)
     {
-        //std::cout << "MERDA\n";
-        //std::cout << "MOUSE X: " << x << " MOUSE Y: " << y << '\n';
-    });*/
+        std::cout << "MOUSE X: " << x << " MOUSE Y: " << y << '\n';
+    });
 }
 
 void StartMenuState::handleEvents()
